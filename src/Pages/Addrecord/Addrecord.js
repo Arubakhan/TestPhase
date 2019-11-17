@@ -9,11 +9,7 @@ import {
   Button,
   Select
 } from "@material-ui/core";
-import {
-  MDBContainer,
-  MDBRow,
-  MDBCol
-} from "mdbreact";
+import { MDBContainer, MDBRow, MDBCol } from "mdbreact";
 import { makeStyles } from "@material-ui/core/styles";
 
 import { Formik, ErrorMessage } from "formik";
@@ -52,61 +48,37 @@ const Addrecord = () => {
   const [openProgram, setOpenProgram] = React.useState(false);
   const [openGender, setOpenGender] = React.useState(false);
 
-  const Add = (values)=>{
-    //  fetch('http://localhost:3000/api/records/',{
-    //             method="POST",
-    //             body: JSON.stringify({
-    //               cnic: values.cnic,
-    //               firstName: values.firstName,
-    //               lastName: values.lastName,
-    //               email: values.email,
-    //               dob: values.dob,
-    //               address: values.address,
-    //               program: values.program,
-    //               gender: values.gender,
-    //               phone: values.phone,
-                
-    //               city: values.city
-    //             }),
-    //             headers:{
-    //               "Content-Type":"application/json"
-    //             }
-                
-    //           })
-    //           .then((res)=>res.json())
-    //           .then((res)=>alert(res))
-              fetch('http://localhost:3000/api/records', {
-                method: 'POST',
-                body: JSON.stringify({
-                  cnic: values.cnic,
-                  firstName: values.firstName,
-                  lastName: values.lastName,
-                  email: values.email,
-                  dob: values.dob,
-                  address: values.address,
-                  program: values.program,
-                  gender: values.gender,
-                  phone: values.phone,
-                
-                  city: values.city
-                }),
-          
-                headers: {
-                  'Content-Type': 'application/json'
-                  
-                },
-          
-              })
-                .then((res) => res.json())
-                .then((res) => {
-                  console.log('res of add', res)
-                 
-                }
-                )
-                .catch((error) => {
-                  alert(JSON.stringify(error));
-                })
-  }
+  const Add = (values, resetForm, setSubmitting) => {
+    fetch("http://localhost:3000/api/records", {
+      method: "POST",
+      body: JSON.stringify({
+        cnic: values.cnic,
+        firstName: values.firstName,
+        lastName: values.lastName,
+        email: values.email,
+        dob: values.dob,
+        address: values.address,
+        program: values.program,
+        gender: values.gender,
+        phone: values.phone,
+
+        city: values.city
+      }),
+
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+      .then(res => res.json())
+      .then(res => {
+        alert("Student added successfully");
+        resetForm();
+        setSubmitting(false);
+      })
+      .catch(error => {
+        alert(JSON.stringify(error));
+      });
+  };
   const handleClose = () => {
     setOpen(false);
   };
@@ -213,7 +185,7 @@ const Addrecord = () => {
             })}
             onSubmit={(values, { setSubmitting, resetForm }) => {
               console.log("vaavavavava", values);
-             Add(values)
+              Add(values, resetForm, setSubmitting);
             }}
           >
             {formik => (
@@ -551,6 +523,7 @@ const Addrecord = () => {
                         <Button
                           variant="contained"
                           color="primary"
+                          disabled={formik.setSubmitting}
                           onClick={formik.handleSubmit}
                         >
                           Add Student

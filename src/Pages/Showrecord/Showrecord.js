@@ -1,92 +1,94 @@
 import React from "react";
 import Navbar from "../../components/Navbar/Navbar";
-import { makeStyles } from "@material-ui/core/styles";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
-import Paper from "@material-ui/core/Paper";
+
 import { MDBContainer } from "mdbreact";
+import {
+  TableRow,
+  TableHead,
+  TableCell,
+  TableBody,
+  Table,
+  Paper
+} from "@material-ui/core";
 
-const useStyles = makeStyles({
-  root: {
-    width: "100%",
-    overflowX: "auto"
-  },
-  table: {
-    minWidth: 650
+export default class ShowRecord extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      records: []
+    };
   }
-});
+  componentDidMount() {
+    this.getAllRecords();
+  }
+  getAllRecords = () => {
+    fetch("http://localhost:3000/api/records", {
+      method: "GET",
 
-function createData(
-  CNIC,
-  Name,
-  DOB,
-  Address,
-  City,
-  DegreeProgram,
-  Sex,
-  Email,
-  Mobile
-) {
-  return { CNIC, Name, DOB, Address, City, DegreeProgram, Sex, Email, Mobile };
-}
-const rows = [
-  createData("Frozen yoghurt", 159, 6.0, 24, 4.0),
-  createData("Ice cream sandwich", 237, 9.0, 37, 4.3),
-  createData("Eclair", 262, 16.0, 24, 6.0),
-  createData("Cupcake", 305, 3.7, 67, 4.3),
-  createData("Gingerbread", 356, 16.0, 49, 3.9),
-  createData("Gingerbread", 356, 16.0, 49, 3.9),
-  createData("Gingerbread", 356, 16.0, 49, 3.9),
-  createData("Gingerbread", 356, 16.0, 49, 3.9),
-  createData("Gingerbread", 356, 16.0, 49, 3.9),
-  createData("Gingerbread", 356, 16.0, 49, 3.9),
-  createData("Gingerbread", 356, 16.0, 49, 3.9),
-  createData("Gingerbread", 356, 16.0, 49, 3.9),
-  createData("Gingerbread", 356, 16.0, 49, 3.9),
-  createData("Gingerbread", 356, 16.0, 49, 3.9),
-  createData("Gingerbread", 356, 16.0, 49, 3.9),
-  createData("Gingerbread", 356, 16.0, 49, 3.9)
-];
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+      .then(res => res.json())
+      .then(res => {
+        console.log("ressss", res);
 
-export default function SimpleTable() {
-  const classes = useStyles();
+        this.setState({
+          records: res
+        });
+      })
+      .catch(error => {
+        alert(JSON.stringify(error));
+      });
+  };
+  render() {
+    // const classes = useStyles();
 
-  return (
-    <div>
-      <Navbar />
+    return (
+      <div>
+        <Navbar />
 
-      <MDBContainer fluid>
-        <Paper style={{ marginTop: 32, padding: 32 }}>
-          <MDBContainer fluid>
-            <Table className={classes.table} aria-label="simple table">
-              <TableHead>
-                <TableRow>
-                  <TableCell>CNIC</TableCell>
-                  <TableCell>Name</TableCell>
-                  <TableCell>DOB</TableCell>
-                  <TableCell>Address</TableCell>
-                  <TableCell>City</TableCell>
-                  <TableCell>Program</TableCell>
-                  <TableCell>Sex</TableCell>
-                  <TableCell>Mobile</TableCell>
-                  <TableCell>Email</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {rows.map(row => (
-                  <TableRow key={row.name}>
-                    {row.name}
-                    jdnkajsdnkj
+        <MDBContainer fluid>
+          <Paper style={{ marginTop: 32, padding: 32 }}>
+            <MDBContainer fluid>
+              <Table aria-label="simple table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell>CNIC</TableCell>
+                    <TableCell>Name</TableCell>
+                    <TableCell>DOB</TableCell>
+                    <TableCell>Address</TableCell>
+                    <TableCell>City</TableCell>
+                    <TableCell>Program</TableCell>
+                    <TableCell>Gender</TableCell>
+                    <TableCell>Mobile</TableCell>
+                    <TableCell>Email</TableCell>
+                    <TableCell>Action</TableCell>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </MDBContainer>
-        </Paper>
-      </MDBContainer>
-    </div>
-  );
+                </TableHead>
+                <TableBody>
+                  {this.state.records.map(item => (
+                    <TableRow key={item.id}>
+                      <TableCell>{item.cnic}</TableCell>
+                      <TableCell>
+                        {item.firstName} {item.lastName}
+                      </TableCell>
+                      <TableCell>{item.dob.substring(0, 10)}</TableCell>
+                      <TableCell>{item.address}</TableCell>
+                      <TableCell>{item.city}</TableCell>
+                      <TableCell>{item.program}}</TableCell>
+                      <TableCell>{item.gender}</TableCell>
+                      <TableCell>{item.phone}</TableCell>
+                      <TableCell>{item.email}</TableCell>
+                      <TableCell>Action</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </MDBContainer>
+          </Paper>
+        </MDBContainer>
+      </div>
+    );
+  }
 }
