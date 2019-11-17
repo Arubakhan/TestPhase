@@ -12,14 +12,11 @@ import {
 import {
   MDBContainer,
   MDBRow,
-  MDBCol,
-  MDBBtn,
-  MDBIcon,
-  MDBInput
+  MDBCol
 } from "mdbreact";
 import { makeStyles } from "@material-ui/core/styles";
 
-import { Formik, Field, Form, ErrorMessage } from "formik";
+import { Formik, ErrorMessage } from "formik";
 import * as Yup from "yup";
 const useStyles = makeStyles(theme => ({
   container: {
@@ -55,6 +52,61 @@ const Addrecord = () => {
   const [openProgram, setOpenProgram] = React.useState(false);
   const [openGender, setOpenGender] = React.useState(false);
 
+  const Add = (values)=>{
+    //  fetch('http://localhost:3000/api/records/',{
+    //             method="POST",
+    //             body: JSON.stringify({
+    //               cnic: values.cnic,
+    //               firstName: values.firstName,
+    //               lastName: values.lastName,
+    //               email: values.email,
+    //               dob: values.dob,
+    //               address: values.address,
+    //               program: values.program,
+    //               gender: values.gender,
+    //               phone: values.phone,
+                
+    //               city: values.city
+    //             }),
+    //             headers:{
+    //               "Content-Type":"application/json"
+    //             }
+                
+    //           })
+    //           .then((res)=>res.json())
+    //           .then((res)=>alert(res))
+              fetch('http://localhost:3000/api/records', {
+                method: 'POST',
+                body: JSON.stringify({
+                  cnic: values.cnic,
+                  firstName: values.firstName,
+                  lastName: values.lastName,
+                  email: values.email,
+                  dob: values.dob,
+                  address: values.address,
+                  program: values.program,
+                  gender: values.gender,
+                  phone: values.phone,
+                
+                  city: values.city
+                }),
+          
+                headers: {
+                  'Content-Type': 'application/json'
+                  
+                },
+          
+              })
+                .then((res) => res.json())
+                .then((res) => {
+                  console.log('res of add', res)
+                 
+                }
+                )
+                .catch((error) => {
+                  alert(JSON.stringify(error));
+                })
+  }
   const handleClose = () => {
     setOpen(false);
   };
@@ -106,7 +158,6 @@ const Addrecord = () => {
               program: "",
               gender: "",
               phone: "",
-              email: "",
               city: ""
             }}
             validationSchema={Yup.object({
@@ -162,11 +213,7 @@ const Addrecord = () => {
             })}
             onSubmit={(values, { setSubmitting, resetForm }) => {
               console.log("vaavavavava", values);
-              setTimeout(() => {
-                alert(JSON.stringify(values, null, 2));
-                setSubmitting(false);
-                resetForm();
-              }, 400);
+             Add(values)
             }}
           >
             {formik => (

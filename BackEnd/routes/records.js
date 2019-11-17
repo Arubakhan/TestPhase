@@ -37,6 +37,7 @@ router.post("/", async (req, res) => {
   });
   try {
     const result = await record.save();
+    console.log(result)
     res.send(result);
   } catch (ex) {
     res.send(ex);
