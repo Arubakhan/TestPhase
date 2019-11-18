@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.6.1",
+    "@material-ui/icons": "^4.5.1",
     "formik": "^2.0.4",
     "mdbreact": "^4.22.1",
     "react": "^16.12.0",

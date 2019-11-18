@@ -14,13 +14,22 @@ router.get("/:id", async (req, res) => {
 
 router.post("/", async (req, res) => {
   const { error } = Validate(req.body);
-  const duplicate = await Record.find({ cnic: req.body.cnic });
+  let duplicate = await Record.find({
+    cnic: req.body.cnic
+  });
+   duplicate = await Record.find({
+    email: req.body.email
+  });
   console.log("same CNIC", duplicate);
 
-  if (duplicate.length === 1)
+  if (duplicate.length === 1) {
     return res
-      .status(400)
-      .send("another user is already registered with this cnic");
+      .send({
+        message:
+          "another user is already registered with the same cnic or email"
+      })
+      .status(400);
+  }
 
   if (error) return res.status(400).send(error.details[0].message);
   const record = new Record({
@@ -37,7 +46,7 @@ router.post("/", async (req, res) => {
   });
   try {
     const result = await record.save();
-    console.log(result)
+    console.log(result);
     res.send(result);
   } catch (ex) {
     res.send(ex);
@@ -51,16 +60,16 @@ router.put("/:id", async (req, res) => {
   const record = await Record.findByIdAndUpdate(
     req.params.id,
     {
-        cnic: req.body.cnic,
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        address: req.body.address,
-        city: req.body.city,
-        program: req.body.program,
-        gender: req.body.gender,
-        phone: req.body.phone,
-        email: req.body.email,
-        dob: req.body.dob
+      cnic: req.body.cnic,
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      address: req.body.address,
+      city: req.body.city,
+      program: req.body.program,
+      gender: req.body.gender,
+      phone: req.body.phone,
+      email: req.body.email,
+      dob: req.body.dob
     },
     { new: true }
   );

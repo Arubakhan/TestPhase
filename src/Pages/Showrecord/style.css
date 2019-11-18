@@ -1,0 +1,11 @@
+.icons {
+  flex: 1;
+  display: flex;
+  justify-content: space-evenly;
+}
+.centered {
+  /* display: "flex"; */
+  justify-content: "center";
+  align-items: "center";
+  background-color: blue;
+}

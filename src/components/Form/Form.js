@@ -1,5 +1,4 @@
 import React from "react";
-import Navbar from "../../components/Navbar/Navbar";
 import {
   Typography,
   TextField,
@@ -42,48 +41,13 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const Addrecord = () => {
+const Form = () => {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const [openProgram, setOpenProgram] = React.useState(false);
   const [openGender, setOpenGender] = React.useState(false);
 
-  const Add = (values, resetForm, setSubmitting) => {
-    fetch("http://localhost:3000/api/records", {
-      method: "POST",
-      body: JSON.stringify({
-        cnic: values.cnic,
-        firstName: values.firstName,
-        lastName: values.lastName,
-        email: values.email,
-        dob: values.dob,
-        address: values.address,
-        program: values.program,
-        gender: values.gender,
-        phone: values.phone,
-
-        city: values.city
-      }),
-
-      headers: {
-        "Content-Type": "application/json"
-      }
-    })
-      .then(res => res.json())
-      .then(res => {
-        console.log("res of add", res);
-        if (res.message) {
-          alert(res.message);
-        } else {
-          alert("Student added successfully");
-          resetForm();
-        }
-
-        setSubmitting(false);
-      })
-      .catch(error => {
-        alert(JSON.stringify(error));
-      });
+  
   };
   const handleClose = () => {
     setOpen(false);
@@ -111,33 +75,9 @@ const Addrecord = () => {
     <div>
       <Navbar />
       <MDBContainer>
-        <Paper style={{ marginTop: 64, marginBottom: 64, paddingBottom: 32 }}>
-          <div className={classes.centered}>
-            <Typography
-              variant="display1"
-              color="inherit"
-              style={{
-                marginTop: 16,
-                fontSize: 24,
-                fontFamily: "italic"
-              }}
-            >
-              Add Record
-            </Typography>
-          </div>
+        
           <Formik
-            initialValues={{
-              cnic: "",
-              firstName: "",
-              lastName: "",
-              email: "",
-              dob: "",
-              address: "",
-              program: "",
-              gender: "",
-              phone: "",
-              city: ""
-            }}
+            initialValues={props.initialValues}
             validationSchema={Yup.object({
               cnic: Yup.string()
                 .matches(
@@ -190,8 +130,7 @@ const Addrecord = () => {
               dob: Yup.date().required("Required")
             })}
             onSubmit={(values, { setSubmitting, resetForm }) => {
-              console.log("vaavavavava", values);
-              Add(values, resetForm, setSubmitting);
+              props.Save(values, resetForm, setSubmitting);
             }}
           >
             {formik => (
@@ -529,6 +468,7 @@ const Addrecord = () => {
                         <Button
                           variant="contained"
                           color="primary"
+                          disabled={formik.setSubmitting}
                           onClick={formik.handleSubmit}
                         >
                           Add Student
@@ -541,9 +481,8 @@ const Addrecord = () => {
               </MDBContainer>
             )}
           </Formik>
-        </Paper>
       </MDBContainer>
     </div>
   );
-};
-export default Addrecord;
+
+export default Form;
